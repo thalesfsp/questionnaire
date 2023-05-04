@@ -94,9 +94,10 @@ func New[T any](value T, params ...Func) (Option[T], error) {
 	}
 
 	o := Option[T]{
-		Label:          p.Label,
-		Value:          value,
-		Weight:         p.Weight,
+		Label:  p.Label,
+		Value:  value,
+		Weight: p.Weight,
+
 		nextQuestionID: p.NextQuestionID,
 		forwardFunc:    p.forwardFunc,
 		state:          p.State,

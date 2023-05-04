@@ -49,6 +49,12 @@ type NextQuestionFunc func() string
 
 // Options contains the fields shared between request's options.
 type Options struct {
+	// Group of the option.
+	Group string `json:"group"`
+
+	// ImageURL is the URL of the image.
+	ImageURL string `json:"url"`
+
 	// Label is the label of the option.
 	Label string `json:"label"`
 
@@ -69,6 +75,15 @@ type Options struct {
 func WithForwardFunc(f ForwardFunc) Func {
 	return func(o *Options) error {
 		o.forwardFunc = f
+
+		return nil
+	}
+}
+
+// WithGroup sets the group of an option.
+func WithGroup(group string) Func {
+	return func(o *Options) error {
+		o.Group = group
 
 		return nil
 	}
