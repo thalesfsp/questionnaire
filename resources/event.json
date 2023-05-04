@@ -1,0 +1,326 @@
+{
+  "previousQuestion": {
+    "createdAt": "2023-05-03T20:46:15.671378-07:00",
+    "deleteAt": "0001-01-01T00:00:00Z",
+    "id": "wyfc",
+    "status": "active",
+    "updatedAt": "2023-05-03T20:46:15.67138-07:00",
+    "meta": { "url": "", "required": false, "weight": 1 },
+    "label": "What's your favorite color?",
+    "options": {
+      "c562f04f-fc46-4f6f-b1a0-fb54c4d92ebb": {
+        "createdAt": "2023-05-03T20:46:15.671272-07:00",
+        "deleteAt": "0001-01-01T00:00:00Z",
+        "id": "c562f04f-fc46-4f6f-b1a0-fb54c4d92ebb",
+        "status": "active",
+        "updatedAt": "2023-05-03T20:46:15.671275-07:00",
+        "label": "",
+        "value": "Red",
+        "weight": 1
+      },
+      "fcd3b12c-ea41-40c6-afbb-3dd370ff122c": {
+        "createdAt": "2023-05-03T20:46:15.671323-07:00",
+        "deleteAt": "0001-01-01T00:00:00Z",
+        "id": "fcd3b12c-ea41-40c6-afbb-3dd370ff122c",
+        "status": "active",
+        "updatedAt": "2023-05-03T20:46:15.671325-07:00",
+        "label": "",
+        "value": "Blue",
+        "weight": 1
+      }
+    },
+    "type": "text"
+  },
+  "currentQuestion": {
+    "createdAt": "2023-05-03T20:46:15.671398-07:00",
+    "deleteAt": "0001-01-01T00:00:00Z",
+    "id": "hmyopedyh",
+    "status": "active",
+    "updatedAt": "2023-05-03T20:46:15.6714-07:00",
+    "meta": { "url": "", "required": false, "weight": 1 },
+    "label": "How many years of programming experience do you have?",
+    "options": {
+      "ff3d75de-525f-4a49-a7fa-646dd84e6847": {
+        "createdAt": "2023-05-03T20:46:15.671334-07:00",
+        "deleteAt": "0001-01-01T00:00:00Z",
+        "id": "ff3d75de-525f-4a49-a7fa-646dd84e6847",
+        "status": "active",
+        "updatedAt": "2023-05-03T20:46:15.671336-07:00",
+        "label": "",
+        "value": 0,
+        "weight": 1
+      },
+      "6bd2888e-7455-4585-9fc0-6b3546b19d36": {
+        "createdAt": "2023-05-03T20:46:15.671346-07:00",
+        "deleteAt": "0001-01-01T00:00:00Z",
+        "id": "6bd2888e-7455-4585-9fc0-6b3546b19d36",
+        "status": "active",
+        "updatedAt": "2023-05-03T20:46:15.671348-07:00",
+        "label": "",
+        "value": 1,
+        "weight": 1
+      }
+    },
+    "type": "single-select"
+  },
+  "state": "done",
+  "totalAnswers": 3,
+  "totalQuestions": 3,
+  "answers": {
+    "wyfc": {
+      "createdAt": "2023-05-03T20:46:15.673987-07:00",
+      "deleteAt": "0001-01-01T00:00:00Z",
+      "id": "wyfc",
+      "status": "active",
+      "updatedAt": "2023-05-03T20:46:15.673988-07:00",
+      "question": {
+        "createdAt": "2023-05-03T20:46:15.671378-07:00",
+        "deleteAt": "0001-01-01T00:00:00Z",
+        "id": "wyfc",
+        "status": "active",
+        "updatedAt": "2023-05-03T20:46:15.67138-07:00",
+        "meta": { "url": "", "required": false, "weight": 1 },
+        "label": "What's your favorite color?",
+        "options": {
+          "c562f04f-fc46-4f6f-b1a0-fb54c4d92ebb": {
+            "createdAt": "2023-05-03T20:46:15.671272-07:00",
+            "deleteAt": "0001-01-01T00:00:00Z",
+            "id": "c562f04f-fc46-4f6f-b1a0-fb54c4d92ebb",
+            "status": "active",
+            "updatedAt": "2023-05-03T20:46:15.671275-07:00",
+            "label": "",
+            "value": "Red",
+            "weight": 1
+          },
+          "fcd3b12c-ea41-40c6-afbb-3dd370ff122c": {
+            "createdAt": "2023-05-03T20:46:15.671323-07:00",
+            "deleteAt": "0001-01-01T00:00:00Z",
+            "id": "fcd3b12c-ea41-40c6-afbb-3dd370ff122c",
+            "status": "active",
+            "updatedAt": "2023-05-03T20:46:15.671325-07:00",
+            "label": "",
+            "value": "Blue",
+            "weight": 1
+          }
+        },
+        "type": "text"
+      },
+      "option": {
+        "createdAt": "2023-05-03T20:46:15.671272-07:00",
+        "deleteAt": "0001-01-01T00:00:00Z",
+        "id": "c562f04f-fc46-4f6f-b1a0-fb54c4d92ebb",
+        "status": "active",
+        "updatedAt": "2023-05-03T20:46:15.671275-07:00",
+        "label": "",
+        "value": "Red",
+        "weight": 1
+      }
+    },
+    "ayfgpl": {
+      "createdAt": "2023-05-03T20:46:15.672765-07:00",
+      "deleteAt": "0001-01-01T00:00:00Z",
+      "id": "ayfgpl",
+      "status": "active",
+      "updatedAt": "2023-05-03T20:46:15.672767-07:00",
+      "question": {
+        "createdAt": "2023-05-03T20:46:15.671412-07:00",
+        "deleteAt": "0001-01-01T00:00:00Z",
+        "id": "ayfgpl",
+        "status": "active",
+        "updatedAt": "2023-05-03T20:46:15.671414-07:00",
+        "meta": { "url": "", "required": false, "weight": 1 },
+        "label": "Are you familiar with the Go programming language?",
+        "options": {
+          "5f7a2b22-e472-4574-a74c-e09bc7960488": {
+            "createdAt": "2023-05-03T20:46:15.671356-07:00",
+            "deleteAt": "0001-01-01T00:00:00Z",
+            "id": "5f7a2b22-e472-4574-a74c-e09bc7960488",
+            "status": "active",
+            "updatedAt": "2023-05-03T20:46:15.671358-07:00",
+            "label": "",
+            "value": true,
+            "weight": 1
+          },
+          "c80e39de-3d58-4b58-9fe7-6d2cb80f7356": {
+            "createdAt": "2023-05-03T20:46:15.671367-07:00",
+            "deleteAt": "0001-01-01T00:00:00Z",
+            "id": "c80e39de-3d58-4b58-9fe7-6d2cb80f7356",
+            "status": "active",
+            "updatedAt": "2023-05-03T20:46:15.671368-07:00",
+            "label": "",
+            "value": false,
+            "weight": 1
+          }
+        },
+        "type": "single-select"
+      },
+      "option": {
+        "createdAt": "2023-05-03T20:46:15.671356-07:00",
+        "deleteAt": "0001-01-01T00:00:00Z",
+        "id": "5f7a2b22-e472-4574-a74c-e09bc7960488",
+        "status": "active",
+        "updatedAt": "2023-05-03T20:46:15.671358-07:00",
+        "label": "",
+        "value": true,
+        "weight": 1
+      }
+    },
+    "hmyopedyh": {
+      "createdAt": "2023-05-03T20:46:15.67351-07:00",
+      "deleteAt": "0001-01-01T00:00:00Z",
+      "id": "hmyopedyh",
+      "status": "active",
+      "updatedAt": "2023-05-03T20:46:15.673511-07:00",
+      "question": {
+        "createdAt": "2023-05-03T20:46:15.671398-07:00",
+        "deleteAt": "0001-01-01T00:00:00Z",
+        "id": "hmyopedyh",
+        "status": "active",
+        "updatedAt": "2023-05-03T20:46:15.6714-07:00",
+        "meta": { "url": "", "required": false, "weight": 1 },
+        "label": "How many years of programming experience do you have?",
+        "options": {
+          "ff3d75de-525f-4a49-a7fa-646dd84e6847": {
+            "createdAt": "2023-05-03T20:46:15.671334-07:00",
+            "deleteAt": "0001-01-01T00:00:00Z",
+            "id": "ff3d75de-525f-4a49-a7fa-646dd84e6847",
+            "status": "active",
+            "updatedAt": "2023-05-03T20:46:15.671336-07:00",
+            "label": "",
+            "value": 0,
+            "weight": 1
+          },
+          "6bd2888e-7455-4585-9fc0-6b3546b19d36": {
+            "createdAt": "2023-05-03T20:46:15.671346-07:00",
+            "deleteAt": "0001-01-01T00:00:00Z",
+            "id": "6bd2888e-7455-4585-9fc0-6b3546b19d36",
+            "status": "active",
+            "updatedAt": "2023-05-03T20:46:15.671348-07:00",
+            "label": "",
+            "value": 1,
+            "weight": 1
+          }
+        },
+        "type": "single-select"
+      },
+      "option": {
+        "createdAt": "2023-05-03T20:46:15.671346-07:00",
+        "deleteAt": "0001-01-01T00:00:00Z",
+        "id": "6bd2888e-7455-4585-9fc0-6b3546b19d36",
+        "status": "active",
+        "updatedAt": "2023-05-03T20:46:15.671348-07:00",
+        "label": "",
+        "value": 1,
+        "weight": 1
+      }
+    }
+  },
+  "questionnaire": {
+    "createdAt": "2023-05-03T20:46:15.671426-07:00",
+    "deleteAt": "0001-01-01T00:00:00Z",
+    "id": "42ade21d-0dc6-4cbb-914b-d14b98cd0964",
+    "status": "active",
+    "updatedAt": "2023-05-03T20:46:15.671428-07:00",
+    "hash": "64cb2abf536e724f6a8a95d3296d4d1e8e34969e55f2d6c7a3d0ab98546dd358",
+    "questions": {
+      "wyfc": {
+        "createdAt": "2023-05-03T20:46:15.671378-07:00",
+        "deleteAt": "0001-01-01T00:00:00Z",
+        "id": "wyfc",
+        "status": "active",
+        "updatedAt": "2023-05-03T20:46:15.67138-07:00",
+        "meta": { "url": "", "required": false, "weight": 1 },
+        "label": "What's your favorite color?",
+        "options": {
+          "c562f04f-fc46-4f6f-b1a0-fb54c4d92ebb": {
+            "createdAt": "2023-05-03T20:46:15.671272-07:00",
+            "deleteAt": "0001-01-01T00:00:00Z",
+            "id": "c562f04f-fc46-4f6f-b1a0-fb54c4d92ebb",
+            "status": "active",
+            "updatedAt": "2023-05-03T20:46:15.671275-07:00",
+            "label": "",
+            "value": "Red",
+            "weight": 1
+          },
+          "fcd3b12c-ea41-40c6-afbb-3dd370ff122c": {
+            "createdAt": "2023-05-03T20:46:15.671323-07:00",
+            "deleteAt": "0001-01-01T00:00:00Z",
+            "id": "fcd3b12c-ea41-40c6-afbb-3dd370ff122c",
+            "status": "active",
+            "updatedAt": "2023-05-03T20:46:15.671325-07:00",
+            "label": "",
+            "value": "Blue",
+            "weight": 1
+          }
+        },
+        "type": "text"
+      },
+      "hmyopedyh": {
+        "createdAt": "2023-05-03T20:46:15.671398-07:00",
+        "deleteAt": "0001-01-01T00:00:00Z",
+        "id": "hmyopedyh",
+        "status": "active",
+        "updatedAt": "2023-05-03T20:46:15.6714-07:00",
+        "meta": { "url": "", "required": false, "weight": 1 },
+        "label": "How many years of programming experience do you have?",
+        "options": {
+          "ff3d75de-525f-4a49-a7fa-646dd84e6847": {
+            "createdAt": "2023-05-03T20:46:15.671334-07:00",
+            "deleteAt": "0001-01-01T00:00:00Z",
+            "id": "ff3d75de-525f-4a49-a7fa-646dd84e6847",
+            "status": "active",
+            "updatedAt": "2023-05-03T20:46:15.671336-07:00",
+            "label": "",
+            "value": 0,
+            "weight": 1
+          },
+          "6bd2888e-7455-4585-9fc0-6b3546b19d36": {
+            "createdAt": "2023-05-03T20:46:15.671346-07:00",
+            "deleteAt": "0001-01-01T00:00:00Z",
+            "id": "6bd2888e-7455-4585-9fc0-6b3546b19d36",
+            "status": "active",
+            "updatedAt": "2023-05-03T20:46:15.671348-07:00",
+            "label": "",
+            "value": 1,
+            "weight": 1
+          }
+        },
+        "type": "single-select"
+      },
+      "ayfgpl": {
+        "createdAt": "2023-05-03T20:46:15.671412-07:00",
+        "deleteAt": "0001-01-01T00:00:00Z",
+        "id": "ayfgpl",
+        "status": "active",
+        "updatedAt": "2023-05-03T20:46:15.671414-07:00",
+        "meta": { "url": "", "required": false, "weight": 1 },
+        "label": "Are you familiar with the Go programming language?",
+        "options": {
+          "5f7a2b22-e472-4574-a74c-e09bc7960488": {
+            "createdAt": "2023-05-03T20:46:15.671356-07:00",
+            "deleteAt": "0001-01-01T00:00:00Z",
+            "id": "5f7a2b22-e472-4574-a74c-e09bc7960488",
+            "status": "active",
+            "updatedAt": "2023-05-03T20:46:15.671358-07:00",
+            "label": "",
+            "value": true,
+            "weight": 1
+          },
+          "c80e39de-3d58-4b58-9fe7-6d2cb80f7356": {
+            "createdAt": "2023-05-03T20:46:15.671367-07:00",
+            "deleteAt": "0001-01-01T00:00:00Z",
+            "id": "c80e39de-3d58-4b58-9fe7-6d2cb80f7356",
+            "status": "active",
+            "updatedAt": "2023-05-03T20:46:15.671368-07:00",
+            "label": "",
+            "value": false,
+            "weight": 1
+          }
+        },
+        "type": "single-select"
+      }
+    },
+    "title": "Simple Survey - 1"
+  },
+  "userID": "12345"
+}
