@@ -22,6 +22,8 @@ func MapToOption[T shared.N](m map[string]any) (Option[T], error) {
 }
 
 // AnyToOption converts any to the proper Option[Type] then to any.
+//
+//nolint:gocritic,forcetypeassert,gosimple
 func AnyToOption(v any) any {
 	switch v.(type) {
 	case Option[int]:

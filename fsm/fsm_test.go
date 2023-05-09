@@ -215,7 +215,7 @@ func TestNew_branching(t *testing.T) {
 			//////
 
 			var loadedDump event.Event
-			shared.Unmarshal(b, &loadedDump)
+			_ = shared.Unmarshal(b, &loadedDump)
 
 			fsm2, err2 := New(ctx, "12345", *q, cb)
 			assert.NoError(t, err2)

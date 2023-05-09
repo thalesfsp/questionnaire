@@ -44,6 +44,8 @@ func (a Answer) GetOption() any {
 }
 
 // GetOption returns the option at the time of the answer.
+//
+//nolint:forcetypeassert
 func GetOption[T shared.N](a Answer) option.Option[T] {
 	return a.Option.(option.Option[T])
 }

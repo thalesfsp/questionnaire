@@ -81,8 +81,11 @@ func AddOption[T shared.N](q *Question, o ...option.Option[T]) {
 }
 
 // GetOption returns an option from the question.
+//
+//nolint:forcetypeassert
 func GetOption[T shared.N](q Question, id string) (option.Option[T], error) {
 	opt, _ := q.Options.Get(id)
+
 	return option.MapToOption[T](opt.(map[string]any))
 }
 
@@ -94,6 +97,8 @@ func GetOption[T shared.N](q Question, id string) (option.Option[T], error) {
 //////
 
 // New creates a new Question.
+//
+//nolint:forcetypeassert
 func New[T shared.N](
 	id string,
 	label string,
