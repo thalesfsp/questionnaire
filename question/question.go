@@ -2,19 +2,27 @@ package question
 
 import (
 	"github.com/thalesfsp/configurer/util"
+	"github.com/thalesfsp/go-common-types/safeorderedmap"
 	"github.com/thalesfsp/questionnaire/common"
+	"github.com/thalesfsp/questionnaire/internal/shared"
 	"github.com/thalesfsp/questionnaire/option"
 	"github.com/thalesfsp/questionnaire/types"
 )
 
 //////
-// Var, const, and types.
+// Consts, vars, and types.
 //////
 
 // Meta enriches the question with metadata. Add here anything you need.
 type Meta struct {
+	// ID of the question.
+	ID string `json:"id"`
+
 	// ImageURL is the URL of the image.
 	ImageURL string `json:"url"`
+
+	// Index is the index of the question.
+	Index int `json:"index"`
 
 	// Required is a flag to indicate if the question is required.
 	Required bool `json:"required" default:"false"`
@@ -23,7 +31,7 @@ type Meta struct {
 	Weight int `json:"weight"`
 
 	// Options is a list of options for the question to be answered.
-	options []option.IOption `json:"-"`
+	options []any `json:"-"`
 }
 
 // Question with options to be answered.
@@ -34,16 +42,16 @@ type Question struct {
 	Meta Meta `json:"meta"`
 
 	// Label is the question.
-	Label string `json:"label" validate:"required"`
+	Label string `json:"label"`
 
 	// Options is a list of options for the question to be answered.
-	Options *option.Map `json:"options"`
+	Options *safeorderedmap.SafeOrderedMap[any] `json:"options"`
 
 	// PreviousQuestionID is the ID of the previous question.
 	PreviousQuestionID string `json:"-"`
 
 	// Type of the question.
-	Type types.Type `json:"type" validate:"required"`
+	Type types.Type `json:"type"`
 }
 
 //////
@@ -55,13 +63,27 @@ func (q *Question) GetID() string {
 	return q.Common.ID
 }
 
-// AddOption adds options to the question.
-func (q *Question) AddOption(o ...option.IOption) *Question {
-	for _, opt := range o {
-		q.Options.Store(opt.GetID(), opt)
-	}
+// GetIndex returns the index of the question.
+func (q *Question) GetIndex() int {
+	return q.Meta.Index
+}
 
-	return q
+// SetIndex sets the index of the question.
+func (q *Question) SetIndex(index int) {
+	q.Meta.Index = index
+}
+
+// AddOption adds an option to the question.
+func AddOption[T shared.N](q *Question, o ...option.Option[T]) {
+	for _, opt := range o {
+		q.Options.Add(opt.GetID(), opt)
+	}
+}
+
+// GetOption returns an option from the question.
+func GetOption[T shared.N](q Question, id string) (option.Option[T], error) {
+	opt, _ := q.Options.Get(id)
+	return option.MapToOption[T](opt.(map[string]any))
 }
 
 //////
@@ -71,8 +93,8 @@ func (q *Question) AddOption(o ...option.IOption) *Question {
 // runs Process().
 //////
 
-// New creates a new questionnaire.
-func New(
+// New creates a new Question.
+func New[T shared.N](
 	id string,
 	label string,
 	t types.Type,
@@ -81,7 +103,7 @@ func New(
 	m := Meta{
 		ImageURL: "",
 		Required: false,
-		options:  []option.IOption{},
+		options:  []any{},
 		Weight:   1,
 	}
 
@@ -92,10 +114,18 @@ func New(
 		}
 	}
 
-	optsMap := option.NewMap()
+	//////
+	// Add options to the question.
+	//////
 
+	// Initialize the options map.
+	optsMap := safeorderedmap.New[any]()
+
+	// Iterate over the m.options (any) and add to the map
 	for _, o := range m.options {
-		optsMap.Store(o.GetID(), o)
+		oTemp := o.(option.Option[T])
+
+		optsMap.Add(oTemp.GetID(), oTemp)
 	}
 
 	q := Question{
@@ -118,13 +148,13 @@ func New(
 }
 
 // MustNew creates a new questionnaire and panics if there's an error.
-func MustNew(
+func MustNew[T shared.N](
 	id string,
 	label string,
 	t types.Type,
 	params ...Func,
 ) Question {
-	q, err := New(id, label, t, params...)
+	q, err := New[T](id, label, t, params...)
 	if err != nil {
 		panic(err)
 	}

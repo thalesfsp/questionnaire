@@ -5,7 +5,7 @@ import (
 	"expvar"
 	"fmt"
 
-	"github.com/thalesfsp/customerror"
+	"github.com/thalesfsp/go-common-types/safeorderedmap"
 	"github.com/thalesfsp/questionnaire/answer"
 	"github.com/thalesfsp/questionnaire/errorcatalog"
 	"github.com/thalesfsp/questionnaire/event"
@@ -23,7 +23,7 @@ import (
 )
 
 //////
-// Var, const, and types.
+// Consts, vars, and types.
 //////
 
 // Type is the type of the entity regarding the framework. It is used to for
@@ -34,13 +34,29 @@ const (
 	Type                      = "FiniteStateMachine"
 )
 
+// Callback is a function that is called every time the state of the
+// questionnaire changes.
+type Callback func(e event.Event, journal []event.Event)
+
 // FiniteStateMachine is the Finite State Machine for the Questionnaire.
 type FiniteStateMachine struct {
-	// Answers is the list of answers.
-	Answers *answer.Map `json:"answers"`
+	// CurrentQuestion is the current question.
+	CurrentQuestion question.Question `json:"currentQuestion"`
 
 	// CurrentQuestionID is the ID of the current question.
 	CurrentQuestionID string `json:"currentQuestionID"`
+
+	// CurrentQuestionIndex is the current question index.
+	CurrentQuestionIndex int `json:"currentQuestionIndex"`
+
+	// PreviousQuestionID is the ID of the previous question.
+	PreviousQuestionID string `json:"previousQuestionID"`
+
+	// TotalAnswers is the total number of answers.
+	TotalAnswers int `json:"totalAnswers"`
+
+	// TotalQuestions is the total number of questions.
+	TotalQuestions int `json:"totalQuestions"`
 
 	// Journal is the list of events.
 	Journal []event.Event `json:"journal"`
@@ -48,11 +64,17 @@ type FiniteStateMachine struct {
 	// Logger.
 	Logger sypl.ISypl `json:"-" validate:"required"`
 
-	// PreviousQuestionID is the ID of the previous question.
-	PreviousQuestionID string `json:"previousQuestionID"`
+	// Answers is the list of answers.
+	Answers *safeorderedmap.SafeOrderedMap[answer.Answer] `json:"answers"`
 
 	// Questionnaire is the questionnaire.
 	Questionnaire questionnaire.Questionnaire `json:"Questionnaire" validate:"required"`
+
+	// PreviousQuestion is the previous question.
+	PreviousQuestion question.Question `json:"previousQuestion"`
+
+	// CurrentAnswer is the current answer.
+	CurrentAnswer answer.Answer `json:"currentAnswer"`
 
 	// State is the current state of the questionnaire.
 	State status.Status `json:"state" validate:"required"`
@@ -62,7 +84,7 @@ type FiniteStateMachine struct {
 
 	// Callback is the function that is called every time the state of the
 	// questionnaire changes. For example: save the state to the database.
-	callback event.Callback `json:"-"`
+	callback Callback `json:"-"`
 
 	// Metrics.
 	counterBackward            *expvar.Int `json:"-" validate:"required,gte=0"`
@@ -108,12 +130,12 @@ func (fsm *FiniteStateMachine) GetState() status.Status {
 func (fsm *FiniteStateMachine) navigate(id string) *FiniteStateMachine {
 	// Should do nothing if there's no previous question or if the FSM is in the
 	// Started status.
-	if fsm.PreviousQuestionID == "" || fsm.State == status.Initialized {
-		return fsm
-	}
+	// if fsm.PreviousQuestionID == "" || fsm.State == status.Initialized {
+	// 	return fsm
+	// }
 
 	// Load the current question - just to store reference.
-	currentQst := fsm.Questionnaire.Questions.Load(fsm.CurrentQuestionID)
+	currentQst, _ := fsm.Questionnaire.Questions.Get(fsm.CurrentQuestionID)
 
 	// Load the answer based on the previous question ID. This is what matters.
 	finalID := fsm.PreviousQuestionID
@@ -123,10 +145,8 @@ func (fsm *FiniteStateMachine) navigate(id string) *FiniteStateMachine {
 		finalID = id
 	}
 
-	aswr := fsm.Answers.Load(finalID)
-
-	// Do nothing if there's no answer.
-	if aswr == nil {
+	aswr, ok := fsm.Answers.Get(finalID)
+	if !ok { // Should do nothing if there's no answer.
 		return fsm
 	}
 
@@ -134,10 +154,26 @@ func (fsm *FiniteStateMachine) navigate(id string) *FiniteStateMachine {
 	answeredQst := aswr.GetQuestion()
 
 	// Set the current question ID to the loaded question.
-	fsm.CurrentQuestionID = answeredQst.ID
+	fsm.CurrentQuestionID = answeredQst.GetID()
+
+	// Set the current question.
+	fsm.CurrentQuestion = answeredQst
+
+	// Set the current question index.
+	fsm.CurrentQuestionIndex = fsm.CurrentQuestion.GetIndex()
 
 	// Set the previous question ID to the loaded question's previous question.
 	fsm.PreviousQuestionID = answeredQst.PreviousQuestionID
+
+	// Load the previous question.
+	previousQst, _ := fsm.Questionnaire.Questions.Get(fsm.PreviousQuestionID)
+
+	// Set the previous question.
+	fsm.PreviousQuestion = previousQst
+
+	// Set the current answer.
+	finalAnswer, _ := fsm.Answers.Get(answeredQst.GetID())
+	fsm.CurrentAnswer = finalAnswer
 
 	// Ensure's the proper state is set.
 	fsm.State = status.Runnning
@@ -155,56 +191,6 @@ func (fsm *FiniteStateMachine) navigate(id string) *FiniteStateMachine {
 	return fsm
 }
 
-// Create the answer based on the option.
-func (fsm *FiniteStateMachine) optionToAnswer(
-	ctx context.Context,
-	qst question.Question,
-	opt option.IOption,
-) (answer.IAnswer, error) {
-	var aswr answer.IAnswer
-
-	switch opt := opt.(type) {
-	case option.Option[bool]:
-		aswr = answer.MustNew[bool](qst, opt)
-
-	case option.Option[float64]:
-		aswr = answer.MustNew[float64](qst, opt)
-
-	case option.Option[float32]:
-		aswr = answer.MustNew[float32](qst, opt)
-
-	case option.Option[int]:
-		aswr = answer.MustNew[int](qst, opt)
-
-	case option.Option[string]:
-		aswr = answer.MustNew[string](qst, opt)
-
-	case option.Option[[]bool]:
-		aswr = answer.MustNew[[]bool](qst, opt)
-
-	case option.Option[[]float64]:
-		aswr = answer.MustNew[[]float64](qst, opt)
-
-	case option.Option[[]float32]:
-		aswr = answer.MustNew[[]float32](qst, opt)
-
-	case option.Option[[]int]:
-		aswr = answer.MustNew[[]int](qst, opt)
-
-	case option.Option[[]string]:
-		aswr = answer.MustNew[[]string](qst, opt)
-	default:
-		return nil, customapm.TraceError(
-			ctx,
-			errorcatalog.Catalog.MustGet(errorcatalog.ErrAnswerOptionType, customerror.WithField("option", opt)),
-			fsm.GetLogger(),
-			fsm.counterForwardFailed,
-		)
-	}
-
-	return aswr, nil
-}
-
 //////
 // Special state machine methods.
 //////
@@ -215,10 +201,16 @@ func (fsm *FiniteStateMachine) Start() *FiniteStateMachine {
 	fsm.State = status.Runnning
 
 	// Load the first question.
-	qst := fsm.Questionnaire.Questions.LoadByIndex(0)
+	_, qst, _ := fsm.Questionnaire.Questions.First()
 
 	// Set the current question ID.
-	fsm.CurrentQuestionID = qst.ID
+	fsm.CurrentQuestionID = qst.GetID()
+
+	// Set the current question.
+	fsm.CurrentQuestion = qst
+
+	// Set the current question index.
+	fsm.CurrentQuestionIndex = fsm.CurrentQuestion.GetIndex()
 
 	// Emit the state of the machine.
 	fsm.Emit(question.Question{}, qst)
@@ -227,130 +219,6 @@ func (fsm *FiniteStateMachine) Start() *FiniteStateMachine {
 	fsm.counterInitialized.Add(1)
 
 	return fsm
-}
-
-// Forward the current question with the given option.
-//
-//nolint:nestif
-func (fsm *FiniteStateMachine) Forward(ctx context.Context, opt option.IOption) error {
-	// Ensure's the proper state is set.
-	fsm.State = status.Runnning
-
-	//////
-	// Determine the current question.
-	//////
-
-	// Retrieves the current question from the Questionnaire.
-	qst := fsm.Questionnaire.Questions.Load(fsm.CurrentQuestionID)
-
-	fsm.PreviousQuestionID = qst.GetID()
-
-	//////
-	// Deal with answer.
-	//
-	// NOTE: The following are all the possible types of answers. Update
-	// accordingly.
-	//////
-
-	aswr, err := fsm.optionToAnswer(ctx, qst, opt)
-	if err != nil {
-		return err
-	}
-
-	// Add answer to the list.
-	fsm.Answers.Store(aswr.GetID(), aswr)
-
-	// Run the answer function.
-	if opt.GetAnswerFunc() != nil {
-		if err := opt.GetAnswerFunc()(option.Answer{
-			ID:             aswr.GetID(),
-			QuestionID:     qst.GetID(),
-			QuestionLabel:  qst.Label,
-			QuestionWeight: qst.Meta.Weight,
-			OptionID:       opt.GetID(),
-			OptionLabel:    opt.GetLabel(),
-			OptionValue:    opt.GetValue(),
-			OptionWeight:   opt.GetWeight(),
-		}); err != nil {
-			return customapm.TraceError(
-				ctx,
-				err,
-				fsm.GetLogger(),
-				fsm.counterForwardFailed,
-			)
-		}
-	}
-
-	// If all questions have been answered, transition to the completed status.
-	if fsm.Answers.Size() == fsm.Questionnaire.Questions.Size() {
-		fsm.State = status.Completed
-	}
-
-	//////
-	// Deal with the next question.
-	//////
-
-	// Evaluate the next question ID.
-	nextQstID := aswr.GetOption().NextQuestionID()
-
-	if nextQstID != "" {
-		// Loads the question from the Questionnaire.
-		nextQst := fsm.Questionnaire.Questions.Load(nextQstID)
-
-		//////
-		// Deal with setting the previous question.
-		//////
-
-		// Sets the previous question ID.
-		if nextQst.PreviousQuestionID == "" {
-			nextQst.PreviousQuestionID = qst.GetID()
-		}
-
-		// Update questionnaire's questions with the updated one persisting the
-		// change.
-		fsm.Questionnaire.Questions.Store(nextQst.GetID(), nextQst)
-
-		//////
-		// Deal with settings the current question ID, and determining the status.
-		//////
-
-		// Update the current question ID.
-		fsm.CurrentQuestionID = nextQst.GetID()
-
-		// Optionally, set the state based on the option (answer).
-		if aswr.GetOption().GetState() != status.None {
-			fsm.State = aswr.GetOption().GetState()
-		}
-
-		// Emit the state of the machine.
-		fsm.Emit(qst, nextQst)
-	} else {
-		if aswr.GetOption().GetState() == status.None {
-			return customapm.TraceError(
-				ctx,
-				errorcatalog.Catalog.MustGet(errorcatalog.ErrForwardMissingQors),
-				fsm.GetLogger(),
-				fsm.counterForwardFailed,
-			)
-		}
-
-		fsm.State = aswr.GetOption().GetState()
-
-		// Load previous question.
-		var prevQst question.Question
-
-		if qst.PreviousQuestionID != "" {
-			prevQst = fsm.Questionnaire.Questions.Load(qst.PreviousQuestionID)
-		}
-
-		// Emit the state of the machine.
-		fsm.Emit(prevQst, qst)
-	}
-
-	// Observability: metrics.
-	fsm.counterForward.Add(1)
-
-	return nil
 }
 
 // Backward goes back to the previous question.
@@ -381,19 +249,25 @@ func (fsm *FiniteStateMachine) Done() *FiniteStateMachine {
 // with it :) (e.g. persist it). It includes the a dump of the journal, so you
 // can use it to restore the state of the machine.
 func (fsm *FiniteStateMachine) Emit(prevQst, currentQst question.Question) event.Event {
+	aswr, _ := fsm.Answers.Get(currentQst.GetID())
+
+	cQI, _, _ := fsm.Questionnaire.Questions.Index(currentQst.GetID())
+
 	e := event.Event{
-		CurrentQuestion:  currentQst,
-		State:            fsm.State,
-		TotalAnswers:     fsm.Answers.Size(),
-		TotalQuestions:   fsm.Questionnaire.Questions.Size(),
-		UserID:           fsm.UserID,
-		PreviousQuestion: prevQst,
-		Answers:          fsm.Answers,
-		Questionnaire:    fsm.Questionnaire,
+		CurrentQuestion:      currentQst,
+		CurrentQuestionIndex: cQI,
+		CurrentAnswer:        aswr,
+		State:                fsm.State,
+		TotalAnswers:         fsm.Answers.Size(),
+		TotalQuestions:       fsm.Questionnaire.Questions.Size(),
+		UserID:               fsm.UserID,
+		PreviousQuestion:     prevQst,
+		Answers:              fsm.Answers,
+		Questionnaire:        fsm.Questionnaire,
 	}
 
 	// Emit the state of the machine.
-	fsm.callback(e)
+	fsm.callback(e, fsm.GetJournal())
 
 	// Add the entry to the journal.
 	fsm.AddToJournal(e)
@@ -409,10 +283,146 @@ func (fsm *FiniteStateMachine) Emit(prevQst, currentQst question.Question) event
 
 // Dump returns the current state of the machine.
 func (fsm *FiniteStateMachine) Dump() event.Event {
-	return fsm.Emit(
-		fsm.Questionnaire.Questions.Load(fsm.PreviousQuestionID),
-		fsm.Questionnaire.Questions.Load(fsm.CurrentQuestionID),
-	)
+	// Make sure to emit the latest state
+	previousQuestion, _ := fsm.Questionnaire.Questions.Get(fsm.PreviousQuestionID)
+	currentQuestion, _ := fsm.Questionnaire.Questions.Get(fsm.CurrentQuestionID)
+
+	return fsm.Emit(previousQuestion, currentQuestion)
+}
+
+// SetCallback sets the callback to be called when the state of the machine
+// changes.
+func (fsm *FiniteStateMachine) SetCallback(cb Callback) {
+	fsm.callback = cb
+}
+
+// Forward the current question with the given option.
+//
+//nolint:nestif
+func Forward[T shared.N](ctx context.Context, fsm *FiniteStateMachine, opt option.Option[T]) error {
+	// Ensure's the proper state is set.
+	fsm.State = status.Runnning
+
+	//////
+	// Determine the current question.
+	//////
+
+	// Retrieves the current question from the Questionnaire.
+	qst, _ := fsm.Questionnaire.Questions.Get(fsm.CurrentQuestionID)
+
+	// Sets the previous question ID to the current question ID.
+	fsm.PreviousQuestionID = qst.GetID()
+
+	//////
+	// Deal with answer.
+	//
+	// NOTE: The following are all the possible types of answers. Update
+	// accordingly.
+	//////
+
+	// Create the answer.
+	aswr, err := answer.New(qst, opt)
+	if err != nil {
+		return err
+	}
+
+	// Add answer to the list.
+	fsm.Answers.Add(aswr.GetID(), aswr)
+
+	// If all questions have been answered, transition to the completed status.
+	if fsm.Answers.Size() == fsm.Questionnaire.Questions.Size() {
+		fsm.State = status.Completed
+	}
+
+	//////
+	// Deal with the next question.
+	//////
+
+	// Get the next question ID.
+	nextQstID := opt.NextQuestionID()
+
+	if nextQstID != "" {
+		// Loads the question from the Questionnaire.
+		nextQst, _ := fsm.Questionnaire.Questions.Get(nextQstID)
+
+		//////
+		// Deal with setting the previous question.
+		//////
+
+		// Sets the previous question ID.
+		if nextQst.PreviousQuestionID == "" {
+			nextQst.PreviousQuestionID = qst.GetID()
+		}
+
+		// Update questionnaire's questions with the updated one persisting the
+		// change.
+		fsm.Questionnaire.Questions.Add(nextQst.GetID(), nextQst)
+
+		//////
+		// Deal with settings the current question ID, and determining the status.
+		//////
+
+		// Update the current question ID.
+		fsm.CurrentQuestionID = nextQst.GetID()
+
+		// Set the current question.
+		fsm.CurrentQuestion = nextQst
+
+		// Set the current question index.
+		fsm.CurrentQuestionIndex = fsm.CurrentQuestion.GetIndex()
+
+		// Optionally, set the state based on the option (answer).
+		if opt.GetState() != status.None {
+			fsm.State = opt.GetState()
+		}
+
+		// Emit the state of the machine.
+		fsm.Emit(qst, nextQst)
+	} else {
+		if opt.GetState() == status.None {
+			return customapm.TraceError(
+				ctx,
+				errorcatalog.Catalog.MustGet(errorcatalog.ErrForwardMissingQors),
+				fsm.GetLogger(),
+				fsm.counterForwardFailed,
+			)
+		}
+
+		fsm.State = opt.GetState()
+
+		// Load previous question.
+		var prevQst question.Question
+
+		if qst.PreviousQuestionID != "" {
+			prevQst, _ = fsm.Questionnaire.Questions.Get(qst.PreviousQuestionID)
+		}
+
+		// Emit the state of the machine.
+		fsm.Emit(prevQst, qst)
+	}
+
+	// Observability: metrics.
+	fsm.counterForward.Add(1)
+
+	return nil
+}
+
+// Load the FSM up to state of the event.
+func Load(ctx context.Context, fsm *FiniteStateMachine, e event.Event) *FiniteStateMachine {
+	fsm.Answers = e.Answers
+	fsm.CurrentAnswer = e.CurrentAnswer
+	fsm.CurrentQuestion = e.CurrentQuestion
+	fsm.CurrentQuestionID = e.CurrentQuestion.GetID()
+	fsm.CurrentQuestionIndex = e.CurrentQuestionIndex
+	fsm.PreviousQuestion = e.PreviousQuestion
+	fsm.PreviousQuestionID = e.PreviousQuestion.GetID()
+	fsm.Questionnaire = e.Questionnaire
+	fsm.State = e.State
+	fsm.TotalAnswers = e.TotalAnswers
+	fsm.TotalQuestions = e.TotalQuestions
+	fsm.UserID = e.UserID
+
+	return fsm
 }
 
 //////
@@ -420,11 +430,13 @@ func (fsm *FiniteStateMachine) Dump() event.Event {
 //////
 
 // New creates a new machine status.
+//
+// TODO: Also supports Channel.
 func New(
 	ctx context.Context,
 	userID string,
 	q questionnaire.Questionnaire,
-	cb event.Callback,
+	cb Callback,
 ) (*FiniteStateMachine, error) {
 	// Storage's individual logger.
 	logger := logging.Get().New(Name).SetTags(Type, Name)
@@ -432,7 +444,7 @@ func New(
 	name := shared.RemoveSpacesAndToLower(q.Title)
 
 	f := &FiniteStateMachine{
-		Answers:       answer.NewMap(),
+		Answers:       safeorderedmap.New[answer.Answer](),
 		Questionnaire: q,
 		Logger:        logger,
 		State:         status.Initialized,

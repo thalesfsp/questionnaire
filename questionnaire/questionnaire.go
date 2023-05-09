@@ -5,13 +5,14 @@ import (
 	"encoding/hex"
 
 	"github.com/thalesfsp/configurer/util"
+	"github.com/thalesfsp/go-common-types/safeorderedmap"
 	"github.com/thalesfsp/questionnaire/common"
 	"github.com/thalesfsp/questionnaire/internal/shared"
 	"github.com/thalesfsp/questionnaire/question"
 )
 
 //////
-// Var, const, and types.
+// Consts, vars, and types.
 //////
 
 // Questionnaire is a set of questions.
@@ -22,7 +23,7 @@ type Questionnaire struct {
 	Hash string `json:"hash"`
 
 	// Questions is a list of questions.
-	Questions *question.Map `json:"questions" validate:"required,dive,required"`
+	Questions *safeorderedmap.SafeOrderedMap[question.Question] `json:"questions" validate:"required,dive,required"`
 
 	// Title of the questionnaire.
 	Title string `json:"title" validate:"required"`
@@ -49,10 +50,13 @@ func (q *Questionnaire) generateHash() (string, error) {
 
 // New creates a new questionnaire.
 func New(title string, questions ...question.Question) (*Questionnaire, error) {
-	questionMap := question.NewMap()
+	questionMap := safeorderedmap.New[question.Question]()
 
-	for _, q := range questions {
-		questionMap.Store(q.GetID(), q)
+	for i, q := range questions {
+		// Set index.
+		q.SetIndex(i)
+
+		questionMap.Add(q.GetID(), q)
 	}
 
 	q := &Questionnaire{

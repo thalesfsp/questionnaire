@@ -15,6 +15,13 @@ import (
 	"github.com/thalesfsp/customerror"
 )
 
+// N asd
+//
+// TODO: Make it better.
+type N interface {
+	~int | ~float32 | ~float64 | ~string | bool | ~[]string | ~[]int | []bool | ~[]float32 | ~[]float64 | any
+}
+
 // GenerateUUID generates a RFC4122 UUID and DCE 1.1: Authentication and
 // Security Services.
 func GenerateUUID() string {

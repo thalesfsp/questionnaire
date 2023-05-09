@@ -1,7 +1,7 @@
 package types
 
 //////
-// Var, const, and types.
+// Consts, vars, and types.
 //////
 
 // Type are the possible types of a question.

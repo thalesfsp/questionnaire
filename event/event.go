@@ -1,6 +1,7 @@
 package event
 
 import (
+	"github.com/thalesfsp/go-common-types/safeorderedmap"
 	"github.com/thalesfsp/questionnaire/answer"
 	"github.com/thalesfsp/questionnaire/question"
 	"github.com/thalesfsp/questionnaire/questionnaire"
@@ -8,12 +9,8 @@ import (
 )
 
 //////
-// Const, var, and types.
+// Consts, vars, and types.
 //////
-
-// Callback is a function that is called every time the state of the
-// questionnaire changes.
-type Callback func(Event)
 
 // Event emitted every time the state of the questionnaire changes.
 type Event struct {
@@ -26,6 +23,12 @@ type Event struct {
 
 	// CurrentQuestion is the current question.
 	CurrentQuestion question.Question `json:"currentQuestion"`
+
+	// CurrentQuestionIndex is the current question index.
+	CurrentQuestionIndex int `json:"currentQuestionIndex"`
+
+	// CurrentAnswer is the current answer.
+	CurrentAnswer answer.Answer `json:"currentAnswer"`
 
 	// State is the current state of the questionnaire.
 	State status.Status `json:"state"`
@@ -41,7 +44,7 @@ type Event struct {
 	//////
 
 	// Answers is the list of answers.
-	Answers *answer.Map `json:"answers"`
+	Answers *safeorderedmap.SafeOrderedMap[answer.Answer] `json:"answers"`
 
 	// Questionnaire is the questionnaire.
 	Questionnaire questionnaire.Questionnaire `json:"questionnaire"`

@@ -2,7 +2,10 @@
 
 package question
 
-import "github.com/thalesfsp/questionnaire/option"
+import (
+	"github.com/thalesfsp/questionnaire/internal/shared"
+	"github.com/thalesfsp/questionnaire/option"
+)
 
 //////
 // Vars, consts, and types.
@@ -51,13 +54,24 @@ func WithWeight(weight int) Func {
 }
 
 // WithOption add an option to the question.
-func WithOption(opts ...option.IOption) Func {
+func WithOption[T shared.N](opts ...option.Option[T]) Func {
 	return func(m *Meta) error {
 		if m.options == nil {
-			m.options = []option.IOption{}
+			m.options = make([]any, 0)
 		}
 
-		m.options = append(m.options, opts...)
+		for _, opt := range opts {
+			m.options = append(m.options, opt)
+		}
+
+		return nil
+	}
+}
+
+// WithID allows to set the ID of the question.
+func WithID(id string) Func {
+	return func(m *Meta) error {
+		m.ID = id
 
 		return nil
 	}

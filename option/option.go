@@ -3,15 +3,16 @@ package option
 import (
 	"github.com/thalesfsp/configurer/util"
 	"github.com/thalesfsp/questionnaire/common"
+	"github.com/thalesfsp/questionnaire/internal/shared"
 	"github.com/thalesfsp/status"
 )
 
 //////
-// Var, const, and types.
+// Consts, vars, and types.
 //////
 
 // Option is a value for a question.
-type Option[T any] struct {
+type Option[T shared.N] struct {
 	common.Common `json:",inline"`
 
 	// Label is the label of the option.
@@ -26,11 +27,8 @@ type Option[T any] struct {
 	// NextQuestion is the next question ID.
 	nextQuestionID string `json:"-"`
 
-	// Runs on `Forward`.
-	forwardFunc func(a Answer) error `json:"-"`
-
-	// state sets the state of the option.
-	state status.Status `json:"-"`
+	// State sets the State of the option.
+	State status.Status `json:"state"`
 }
 
 //////
@@ -42,24 +40,19 @@ func (o Option[T]) GetID() string {
 	return o.Common.ID
 }
 
-// GetAnswerFunc returns the answer function.
-func (o Option[T]) GetAnswerFunc() ForwardFunc {
-	return o.forwardFunc
-}
-
 // GetLabel returns the label of the option.
 func (o Option[T]) GetLabel() string {
 	return o.Label
 }
 
 // GetValue returns the value of the option.
-func (o Option[T]) GetValue() interface{} {
+func (o Option[T]) GetValue() T {
 	return o.Value
 }
 
 // GetState returns the state determiner function.
 func (o Option[T]) GetState() status.Status {
-	return o.state
+	return o.State
 }
 
 // GetWeight returns the weight of the option.
@@ -72,6 +65,11 @@ func (o Option[T]) NextQuestionID() string {
 	return o.nextQuestionID
 }
 
+// Get returns the value of the option.
+func (o Option[T]) Get() interface{} {
+	return o
+}
+
 //////
 // Factory.
 //
@@ -80,7 +78,7 @@ func (o Option[T]) NextQuestionID() string {
 //////
 
 // New creates a new Option.
-func New[T any](value T, params ...Func) (Option[T], error) {
+func New[T shared.N](value T, params ...Func) (Option[T], error) {
 	p := &Options{
 		State:  status.None,
 		Weight: 1,
@@ -99,8 +97,12 @@ func New[T any](value T, params ...Func) (Option[T], error) {
 		Weight: p.Weight,
 
 		nextQuestionID: p.NextQuestionID,
-		forwardFunc:    p.forwardFunc,
-		state:          p.State,
+		State:          p.State,
+	}
+
+	// Sets the ID if any.
+	if p.ID != "" {
+		o.ID = p.ID
 	}
 
 	if err := util.Process(&o); err != nil {
@@ -111,7 +113,7 @@ func New[T any](value T, params ...Func) (Option[T], error) {
 }
 
 // MustNew creates a new Option and panics if there's an error.
-func MustNew[T any](value T, p ...Func) Option[T] {
+func MustNew[T shared.N](value T, p ...Func) Option[T] {
 	o, err := New(value, p...)
 	if err != nil {
 		panic(err)

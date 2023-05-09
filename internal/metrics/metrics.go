@@ -4,8 +4,10 @@ import (
 	"expvar"
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/thalesfsp/questionnaire/internal/logging"
+	"github.com/thalesfsp/questionnaire/internal/shared"
 )
 
 // NewInt creates and initializes a new expvar.Int.
@@ -21,7 +23,7 @@ func NewInt(name string) *expvar.Int {
 	counter := expvar.NewInt(
 		fmt.Sprintf(
 			"%s.%s",
-			prefix,
+			prefix+shared.GenerateID(time.Now().String()),
 			name,
 		),
 	)

@@ -35,20 +35,20 @@ type Answer struct {
 	OptionLabel string `json:"optionLabel"`
 
 	// OptionValue is the value at the time of the answer.
-	OptionValue interface{} `json:"optionValue"`
+	OptionValue any `json:"optionValue"`
 
 	// OptionWeight is the weight of the option at the time of the answer.
 	OptionWeight int `json:"optionWeight"`
 }
-
-// ForwardFunc runs in the `Forward` method.
-type ForwardFunc func(a Answer) error
 
 // NextQuestionFunc is a function which determines the next question.
 type NextQuestionFunc func() string
 
 // Options contains the fields shared between request's options.
 type Options struct {
+	// ID of the option.
+	ID string `json:"id"`
+
 	// Group of the option.
 	Group string `json:"group"`
 
@@ -66,18 +66,6 @@ type Options struct {
 
 	// Weight is the weight of the option.
 	Weight int `json:"weight"`
-
-	// Runs on `Forward`.
-	forwardFunc ForwardFunc `json:"-"`
-}
-
-// WithForwardFunc sets `answer` the hook function.
-func WithForwardFunc(f ForwardFunc) Func {
-	return func(o *Options) error {
-		o.forwardFunc = f
-
-		return nil
-	}
 }
 
 // WithGroup sets the group of an option.
@@ -131,6 +119,15 @@ func WithState(s status.Status) Func {
 func WithWeight(w int) Func {
 	return func(o *Options) error {
 		o.Weight = w
+
+		return nil
+	}
+}
+
+// WithID sets the ID of the option.
+func WithID(id string) Func {
+	return func(o *Options) error {
+		o.ID = id
 
 		return nil
 	}
