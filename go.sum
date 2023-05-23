@@ -97,6 +97,8 @@ github.com/thalesfsp/customerror v1.1.6 h1:yEEFimTTqwxw5D6kzgIPOI9lop0dMpF+Ua3Kh
 github.com/thalesfsp/customerror v1.1.6/go.mod h1:cofE04NncfKRQL6SQnVkpkXlgeSwZCcU0BcrE95saXg=
 github.com/thalesfsp/go-common-types v0.0.6 h1:6bmUW5g07tGhSTtRd1Jn+ru7IYbA54HXutAGqCP/yqQ=
 github.com/thalesfsp/go-common-types v0.0.6/go.mod h1:tHWMsBD290q0rOzQvC/gN77b0Nj1fOlxB8sx08kEm7E=
+github.com/thalesfsp/params v0.1.2 h1:3kwzMpM616SOYg7hRs2btNIGiQl9jvS7TbSQwEhLeJ8=
+github.com/thalesfsp/params v0.1.2/go.mod h1:IlZEAsCHABTH32neauCD9m5Rb2QijrXRfnXP95X0ghU=
 github.com/thalesfsp/status v1.0.11 h1:Zfso1Mm9Tbmk6vz5ku8YndBQc8RCc3zOGulCaJT8QLA=
 github.com/thalesfsp/status v1.0.11/go.mod h1:ZwlaaU4tPETPq/wf3bsS/sVqSQpMUPMK7iTqkSSJqVY=
 github.com/thalesfsp/sypl v1.9.14 h1:pbh3VAywN0W5/lR4vXqEEXYV9dw4I7feJzlunufjdy8=
