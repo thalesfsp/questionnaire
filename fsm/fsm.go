@@ -267,7 +267,9 @@ func (fsm *FiniteStateMachine) Emit(prevQst, currentQst question.Question) event
 	}
 
 	// Emit the state of the machine.
-	fsm.callback(e, fsm.GetJournal())
+	if fsm.callback != nil {
+		fsm.callback(e, fsm.GetJournal())
+	}
 
 	// Add the entry to the journal.
 	fsm.AddToJournal(e)
