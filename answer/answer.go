@@ -15,13 +15,13 @@ import (
 
 // Answer is an answer to a question.
 type Answer struct {
-	common.Common `json:",inline"`
+	common.Common `json:",inline" bson:",inline"`
 
 	// Question at the time of the answer.
-	Question question.Question `json:"question"`
+	Question question.Question `json:"question" bson:"question"`
 
 	// Option is the Option at the time of the answer.
-	Option any `json:"option"`
+	Option any `json:"option" bson:"option"`
 }
 
 //////

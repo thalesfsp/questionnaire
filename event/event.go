@@ -19,36 +19,36 @@ type Event struct {
 	//////
 
 	// PreviousQuestion is the previous question.
-	PreviousQuestion question.Question `json:"previousQuestion"`
+	PreviousQuestion question.Question `json:"previousQuestion" bson:"previousQuestion"`
 
 	// CurrentQuestion is the current question.
-	CurrentQuestion question.Question `json:"currentQuestion"`
+	CurrentQuestion question.Question `json:"currentQuestion" bson:"currentQuestion"`
 
 	// CurrentQuestionIndex is the current question index.
-	CurrentQuestionIndex int `json:"currentQuestionIndex"`
+	CurrentQuestionIndex int `json:"currentQuestionIndex" bson:"currentQuestionIndex"`
 
 	// CurrentAnswer is the current answer.
-	CurrentAnswer answer.Answer `json:"currentAnswer"`
+	CurrentAnswer answer.Answer `json:"currentAnswer" bson:"currentAnswer"`
 
 	// State is the current state of the questionnaire.
-	State status.Status `json:"state"`
+	State status.Status `json:"state" bson:"state"`
 
 	// TotalAnswers is the total number of answers.
-	TotalAnswers int `json:"totalAnswers"`
+	TotalAnswers int `json:"totalAnswers" bson:"totalAnswers"`
 
 	// TotalQuestions is the total number of questions.
-	TotalQuestions int `json:"totalQuestions"`
+	TotalQuestions int `json:"totalQuestions" bson:"totalQuestions"`
 
 	//////
 	// Data.
 	//////
 
 	// Answers is the list of answers.
-	Answers *safeorderedmap.SafeOrderedMap[answer.Answer] `json:"answers"`
+	Answers *safeorderedmap.SafeOrderedMap[answer.Answer] `json:"answers" bson:"answers"`
 
 	// Questionnaire is the questionnaire.
-	Questionnaire questionnaire.Questionnaire `json:"questionnaire"`
+	Questionnaire questionnaire.Questionnaire `json:"questionnaire" bson:"questionnaire"`
 
 	// UserID is the ID of the user.
-	UserID string `json:"userID"`
+	UserID string `json:"userID" bson:"userID"`
 }

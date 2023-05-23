@@ -16,42 +16,42 @@ import (
 // Meta enriches the question with metadata. Add here anything you need.
 type Meta struct {
 	// ID of the question.
-	ID string `json:"id"`
+	ID string `json:"id" bson:"id"`
 
 	// ImageURL is the URL of the image.
-	ImageURL string `json:"url"`
+	ImageURL string `json:"url" bson:"url"`
 
 	// Index is the index of the question.
-	Index int `json:"index"`
+	Index int `json:"index" bson:"index"`
 
 	// Required is a flag to indicate if the question is required.
-	Required bool `json:"required" default:"false"`
+	Required bool `json:"required" default:"false" bson:"required"`
 
 	// Weight is the weight of the question.
-	Weight int `json:"weight"`
+	Weight int `json:"weight" bson:"weight"`
 
 	// Options is a list of options for the question to be answered.
-	options []any `json:"-"`
+	options []any `json:"-" bson:"-"`
 }
 
 // Question with options to be answered.
 type Question struct {
-	common.Common `json:",inline"`
+	common.Common `json:",inline" bson:",inline"`
 
 	// Meta is the metadata of the question.
-	Meta Meta `json:"meta"`
+	Meta Meta `json:"meta" bson:"meta"`
 
 	// Label is the question.
-	Label string `json:"label"`
+	Label string `json:"label" bson:"label"`
 
 	// Options is a list of options for the question to be answered.
-	Options *safeorderedmap.SafeOrderedMap[any] `json:"options"`
+	Options *safeorderedmap.SafeOrderedMap[any] `json:"options" bson:"options"`
 
 	// PreviousQuestionID is the ID of the previous question.
-	PreviousQuestionID string `json:"-"`
+	PreviousQuestionID string `json:"-" bson:"-"`
 
 	// Type of the question.
-	Type types.Type `json:"type"`
+	Type types.Type `json:"type" bson:"type"`
 }
 
 //////

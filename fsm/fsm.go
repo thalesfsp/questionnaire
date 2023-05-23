@@ -41,61 +41,61 @@ type Callback func(e event.Event, journal []event.Event)
 // FiniteStateMachine is the Finite State Machine for the Questionnaire.
 type FiniteStateMachine struct {
 	// CurrentQuestion is the current question.
-	CurrentQuestion question.Question `json:"currentQuestion"`
+	CurrentQuestion question.Question `json:"currentQuestion" bson:"currentQuestion"`
 
 	// CurrentQuestionID is the ID of the current question.
-	CurrentQuestionID string `json:"currentQuestionID"`
+	CurrentQuestionID string `json:"currentQuestionID" bson:"currentQuestionID"`
 
 	// CurrentQuestionIndex is the current question index.
-	CurrentQuestionIndex int `json:"currentQuestionIndex"`
+	CurrentQuestionIndex int `json:"currentQuestionIndex" bson:"currentQuestionIndex"`
 
 	// PreviousQuestionID is the ID of the previous question.
-	PreviousQuestionID string `json:"previousQuestionID"`
+	PreviousQuestionID string `json:"previousQuestionID" bson:"previousQuestionID"`
 
 	// TotalAnswers is the total number of answers.
-	TotalAnswers int `json:"totalAnswers"`
+	TotalAnswers int `json:"totalAnswers" bson:"totalAnswers"`
 
 	// TotalQuestions is the total number of questions.
-	TotalQuestions int `json:"totalQuestions"`
+	TotalQuestions int `json:"totalQuestions" bson:"totalQuestions"`
 
 	// Journal is the list of events.
-	Journal []event.Event `json:"journal"`
+	Journal []event.Event `json:"journal" bson:"journal"`
 
 	// Logger.
-	Logger sypl.ISypl `json:"-" validate:"required"`
+	Logger sypl.ISypl `json:"-" bson:"-" validate:"required"`
 
 	// Answers is the list of answers.
-	Answers *safeorderedmap.SafeOrderedMap[answer.Answer] `json:"answers"`
+	Answers *safeorderedmap.SafeOrderedMap[answer.Answer] `json:"answers" bson:"answers"`
 
 	// Questionnaire is the questionnaire.
-	Questionnaire questionnaire.Questionnaire `json:"Questionnaire" validate:"required"`
+	Questionnaire questionnaire.Questionnaire `json:"Questionnaire" bson:"Questionnaire" validate:"required"`
 
 	// PreviousQuestion is the previous question.
-	PreviousQuestion question.Question `json:"previousQuestion"`
+	PreviousQuestion question.Question `json:"previousQuestion" bson:"previousQuestion"`
 
 	// CurrentAnswer is the current answer.
-	CurrentAnswer answer.Answer `json:"currentAnswer"`
+	CurrentAnswer answer.Answer `json:"currentAnswer" bson:"currentAnswer"`
 
 	// State is the current state of the questionnaire.
-	State status.Status `json:"state" validate:"required"`
+	State status.Status `json:"state" validate:"required" bson:"state"`
 
 	// UserID is the ID of the user.
-	UserID string `json:"userID" validate:"required"`
+	UserID string `json:"userID" validate:"required" bson:"userID"`
 
 	// Callback is the function that is called every time the state of the
 	// questionnaire changes. For example: save the state to the database.
-	callback Callback `json:"-"`
+	callback Callback `json:"-" bson:"-"`
 
 	// Metrics.
-	counterBackward            *expvar.Int `json:"-" validate:"required,gte=0"`
-	counterCompleted           *expvar.Int `json:"-" validate:"required,gte=0"`
-	counterDone                *expvar.Int `json:"-" validate:"required,gte=0"`
-	counterEmitted             *expvar.Int `json:"-" validate:"required,gte=0"`
-	counterForward             *expvar.Int `json:"-" validate:"required,gte=0"`
-	counterForwardFailed       *expvar.Int `json:"-" validate:"required,gte=0"`
-	counterInitialized         *expvar.Int `json:"-" validate:"required,gte=0"`
-	counterInstantiationFailed *expvar.Int `json:"-" validate:"required,gte=0"`
-	counterJump                *expvar.Int `json:"-" validate:"required,gte=0"`
+	counterBackward            *expvar.Int `json:"-" bson:"-" validate:"required,gte=0"`
+	counterCompleted           *expvar.Int `json:"-" bson:"-" validate:"required,gte=0"`
+	counterDone                *expvar.Int `json:"-" bson:"-" validate:"required,gte=0"`
+	counterEmitted             *expvar.Int `json:"-" bson:"-" validate:"required,gte=0"`
+	counterForward             *expvar.Int `json:"-" bson:"-" validate:"required,gte=0"`
+	counterForwardFailed       *expvar.Int `json:"-" bson:"-" validate:"required,gte=0"`
+	counterInitialized         *expvar.Int `json:"-" bson:"-" validate:"required,gte=0"`
+	counterInstantiationFailed *expvar.Int `json:"-" bson:"-" validate:"required,gte=0"`
+	counterJump                *expvar.Int `json:"-" bson:"-" validate:"required,gte=0"`
 }
 
 //////

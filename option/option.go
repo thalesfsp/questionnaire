@@ -13,22 +13,22 @@ import (
 
 // Option is a value for a question.
 type Option[T shared.N] struct {
-	common.Common `json:",inline"`
+	common.Common `json:",inline" bson:",inline"`
 
 	// Label is the label of the option.
-	Label string `json:"label"`
+	Label string `json:"label" bson:"label"`
 
 	// Value is the value of the option.
-	Value T `json:"value"`
+	Value T `json:"value" bson:"value"`
 
 	// Weight is the weight of the option.
-	Weight int `json:"weight"`
+	Weight int `json:"weight" bson:"weight"`
 
 	// NextQuestion is the next question ID.
-	nextQuestionID string `json:"-"`
+	nextQuestionID string `json:"-" bson:"-"`
 
 	// State sets the State of the option.
-	State status.Status `json:"state"`
+	State status.Status `json:"state" bson:"state"`
 }
 
 //////

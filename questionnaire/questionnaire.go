@@ -17,16 +17,16 @@ import (
 
 // Questionnaire is a set of questions.
 type Questionnaire struct {
-	common.Common `json:",inline"`
+	common.Common `json:",inline" bson:",inline"`
 
 	// Hash is a hash based on SHA-256. The goal is to avoid data tampering.
-	Hash string `json:"hash"`
+	Hash string `json:"hash" bson:"hash"`
 
 	// Questions is a list of questions.
-	Questions *safeorderedmap.SafeOrderedMap[question.Question] `json:"questions" validate:"required,dive,required"`
+	Questions *safeorderedmap.SafeOrderedMap[question.Question] `json:"questions" bson:"questions" validate:"required,dive,required"`
 
 	// Title of the questionnaire.
-	Title string `json:"title" validate:"required"`
+	Title string `json:"title" bson:"title" validate:"required"`
 }
 
 // generateHash generates a hash based on SHA-256. The goal is to avoid data
