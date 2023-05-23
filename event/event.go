@@ -2,6 +2,7 @@ package event
 
 import (
 	"github.com/thalesfsp/go-common-types/safeorderedmap"
+	"github.com/thalesfsp/params/common"
 	"github.com/thalesfsp/questionnaire/answer"
 	"github.com/thalesfsp/questionnaire/question"
 	"github.com/thalesfsp/questionnaire/questionnaire"
@@ -14,6 +15,8 @@ import (
 
 // Event emitted every time the state of the questionnaire changes.
 type Event struct {
+	common.Common `bson:",inline"`
+
 	//////
 	// Metadata.
 	//////
