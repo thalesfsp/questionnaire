@@ -18,6 +18,12 @@ type Option[T shared.N] struct {
 	// Label is the label of the option.
 	Label string `json:"label" bson:"label"`
 
+	// QuestionID is the ID of the question.
+	QuestionID string `json:"questionID" bson:"questionID"`
+
+	// State sets the State of the option.
+	State status.Status `json:"state" bson:"state"`
+
 	// Value is the value of the option.
 	Value T `json:"value" bson:"value"`
 
@@ -26,9 +32,6 @@ type Option[T shared.N] struct {
 
 	// NextQuestion is the next question ID.
 	nextQuestionID string `json:"-" bson:"-"`
-
-	// State sets the State of the option.
-	State status.Status `json:"state" bson:"state"`
 }
 
 //////
@@ -43,6 +46,18 @@ func (o Option[T]) GetID() string {
 // GetLabel returns the label of the option.
 func (o Option[T]) GetLabel() string {
 	return o.Label
+}
+
+// GetQuestionID returns the question ID of the option.
+func (o Option[T]) GetQuestionID() string {
+	return o.QuestionID
+}
+
+// SetQuestionID returns the question ID of the option.
+func (o Option[T]) SetQuestionID(id string) Option[T] {
+	o.QuestionID = id
+
+	return o
 }
 
 // GetValue returns the value of the option.
@@ -92,9 +107,10 @@ func New[T shared.N](value T, params ...Func) (Option[T], error) {
 	}
 
 	o := Option[T]{
-		Label:  p.Label,
-		Value:  value,
-		Weight: p.Weight,
+		Label:      p.Label,
+		QuestionID: p.QuestionID,
+		Value:      value,
+		Weight:     p.Weight,
 
 		nextQuestionID: p.NextQuestionID,
 		State:          p.State,

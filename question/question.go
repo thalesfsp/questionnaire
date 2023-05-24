@@ -106,6 +106,7 @@ func New[T shared.N](
 	params ...Func,
 ) (Question, error) {
 	m := Meta{
+		ID:       id,
 		ImageURL: "",
 		Required: false,
 		options:  []any{},

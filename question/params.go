@@ -61,6 +61,10 @@ func WithOption[T shared.N](opts ...option.Option[T]) Func {
 		}
 
 		for _, opt := range opts {
+			if m.ID != "" {
+				opt.QuestionID = m.ID
+			}
+
 			m.options = append(m.options, opt)
 		}
 

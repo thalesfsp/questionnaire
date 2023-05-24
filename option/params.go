@@ -61,6 +61,9 @@ type Options struct {
 	// NextQuestion is the next question ID.
 	NextQuestionID string `json:"nextQuestionID"`
 
+	// QuestionID is the ID of the question.
+	QuestionID string `json:"questionID" bson:"questionID"`
+
 	// state sets the state of the option.
 	State status.Status `json:"state"`
 
@@ -128,6 +131,15 @@ func WithWeight(w int) Func {
 func WithID(id string) Func {
 	return func(o *Options) error {
 		o.ID = id
+
+		return nil
+	}
+}
+
+// WithQuestionID sets the weight of the option.
+func WithQuestionID(id string) Func {
+	return func(o *Options) error {
+		o.QuestionID = id
 
 		return nil
 	}
