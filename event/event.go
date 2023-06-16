@@ -50,7 +50,7 @@ type Event struct {
 	Answers *safeorderedmap.SafeOrderedMap[answer.Answer] `json:"answers" bson:"answers"`
 
 	// Questionnaire is the questionnaire.
-	Questionnaire questionnaire.Questionnaire `json:"questionnaire" bson:"questionnaire"`
+	Questionnaire questionnaire.Questionnaire `json:"questionnaire" bson:"questionnaire" validate:"-"`
 
 	// UserID is the ID of the user.
 	UserID string `json:"userID" bson:"userID"`
