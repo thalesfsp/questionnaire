@@ -7,7 +7,7 @@ require (
 	github.com/stretchr/testify v1.8.2
 	github.com/thalesfsp/configurer v1.1.31
 	github.com/thalesfsp/customerror v1.1.6
-	github.com/thalesfsp/go-common-types v0.0.6
+	github.com/thalesfsp/go-common-types v0.0.7
 	github.com/thalesfsp/params v0.1.2
 	github.com/thalesfsp/status v1.0.11
 	github.com/thalesfsp/sypl v1.9.14
